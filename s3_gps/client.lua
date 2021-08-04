@@ -16,8 +16,8 @@ end)
 RegisterNetEvent('s3:gps:client:Used')
 AddEventHandler('s3:gps:client:Used', function()
     local elements = {}
-	table.insert(elements, {label = 'GPS Aç', value = 'gpson'})
-	table.insert(elements, {label = 'GPS Kapat', value = 'gpsoff'})
+	table.insert(elements, {label = 'Open GPS', value = 'gpson'})
+	table.insert(elements, {label = 'Close GPS', value = 'gpsoff'})
     ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps', {
 		title    = 'GPS',
@@ -27,19 +27,17 @@ AddEventHandler('s3:gps:client:Used', function()
 		if data.current.value == 'gpson' then
 			if not gps then
                 ESX.UI.Menu.CloseAll()
-                ESX.ShowNotification("GPS'te görünmesini istediğiniz kodunuzu giriniz!")
+                ESX.ShowNotification("Enter your code that you want to appear on the GPS!")
                 DisplayOnscreenKeyboard(1, "", "", "", "", "", "", 30)
                 while (UpdateOnscreenKeyboard() == 0) do
                     DisableAllControlActions(0)
-                    TriggerEvent('m3:invUseable', false)
                     Wait(0)
                 end
                 if (GetOnscreenKeyboardResult()) then
                     code = GetOnscreenKeyboardResult()
-                    TriggerEvent('m3:invUseable', true)
                 end
                 if code == '' then
-                    ESX.ShowNotification("GPS kodunuz boş olamaz!")
+                    ESX.ShowNotification("Your GPS code cannot be blank!")
                 else
                     gps = true
                     TriggerServerEvent('s3:gps:server:openGPS', code)
@@ -47,15 +45,15 @@ AddEventHandler('s3:gps:client:Used', function()
                     Citizen.Wait(100)
                 end
             else
-                ESX.ShowNotification("GPS'iniz zaten açık!")
+                ESX.ShowNotification("Your GPS is turned on!")
             end
         elseif data.current.value == 'gpsoff' then
             if gps then
                 gps = false
                 TriggerServerEvent('s3:gps:server:closeGPS')
-                ESX.ShowNotification("GPS'iniz kapatıldı!")
+                ESX.ShowNotification("Your GPS is turned off!")
             else
-                ESX.ShowNotification("GPS'iniz zaten kapalı!")
+                ESX.ShowNotification("Your GPS is already turned off!")
             end
 		end
 	end, function(data, menu)
