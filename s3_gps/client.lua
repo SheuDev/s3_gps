@@ -13,8 +13,8 @@ end)
 RegisterNetEvent('s3:gps:client:use')
 AddEventHandler('s3:gps:client:use', function()
     local elements = {}
-	table.insert(elements, {label = 'GPS Aç', value = 'gpson'})
-	table.insert(elements, {label = 'GPS Kapat', value = 'gpsoff'})
+	table.insert(elements, {label = 'Open GPS', value = 'gpson'})
+	table.insert(elements, {label = 'Close GPS', value = 'gpsoff'})
     ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps', {
 		title    = 'GPS',
