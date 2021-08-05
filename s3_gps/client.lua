@@ -1,7 +1,4 @@
-ESX = nil
-gps = false
-blips = {}
-
+ESX, gps, blips = nil, false, {}
 Citizen.CreateThread(function()
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -13,11 +10,11 @@ Citizen.CreateThread(function()
 	PlayerData = ESX.GetPlayerData()
 end)
 
-RegisterNetEvent('s3:gps:client:Used')
-AddEventHandler('s3:gps:client:Used', function()
+RegisterNetEvent('s3:gps:client:use')
+AddEventHandler('s3:gps:client:use', function()
     local elements = {}
-	table.insert(elements, {label = 'Open GPS', value = 'gpson'})
-	table.insert(elements, {label = 'Close GPS', value = 'gpsoff'})
+	table.insert(elements, {label = 'GPS Aç', value = 'gpson'})
+	table.insert(elements, {label = 'GPS Kapat', value = 'gpsoff'})
     ESX.UI.Menu.CloseAll()
 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'gps', {
 		title    = 'GPS',
@@ -41,7 +38,7 @@ AddEventHandler('s3:gps:client:Used', function()
                 else
                     gps = true
                     TriggerServerEvent('s3:gps:server:openGPS', code)
-                    ESX.ShowNotification("GPS'iniz açıldı!")
+                    ESX.ShowNotification("Your GPS is turned on!")
                     Citizen.Wait(100)
                 end
             else
@@ -66,29 +63,14 @@ AddEventHandler('s3:gps:client:closed', function()
     gps = false
 end)
 
-RegisterNetEvent("s3_gps:client:getPlayerInfo")
-AddEventHandler("s3_gps:client:getPlayerInfo", function(table)
-    local veh = nil
-    local move = nil
-    local heli = nil
+RegisterNetEvent("s3:gps:client:getPlayerInfo")
+AddEventHandler("s3:gps:client:getPlayerInfo", function(table)
+    local veh = IsPedInAnyVehicle(GetPlayerPed(GetPlayerFromServerId(table.src)), true)
+    local move = IsVehicleSirenOn(GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(table.src)), true))
+    local heli = IsPedInFlyingVehicle(GetPlayerPed(GetPlayerFromServerId(table.src)))
     if GetPlayerServerId(PlayerId()) ~= table.src then
         if DoesBlipExist(blips[table.src]) then
             RemoveBlip(blips[table.src])
-        end
-        if IsPedInAnyVehicle(GetPlayerPed(GetPlayerFromServerId(table.src)), true) then
-            veh = true
-        else
-            veh = false
-        end
-        if IsVehicleSirenOn(GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(table.src)), true)) then
-            move = true
-        else
-            move = false
-        end
-        if IsPedInFlyingVehicle(GetPlayerPed(GetPlayerFromServerId(table.src))) then
-            heli = true
-        else
-            heli = false
         end
         blips[table.src] = AddBlipForCoord(table.coord.x, table.coord.y, table.coord.z)
         if not move and not veh and not heli then
@@ -117,8 +99,8 @@ AddEventHandler("s3_gps:client:getPlayerInfo", function(table)
     end
 end)
 
-RegisterNetEvent("s3_gps:client:removeBlip")
-AddEventHandler("s3_gps:client:removeBlip", function(src)
+RegisterNetEvent("s3:gps:client:removeBlip")
+AddEventHandler("s3:gps:client:removeBlip", function(src)
     local blip = blips[src]
     if DoesBlipExist(blip) then
         RemoveBlip(blip)
