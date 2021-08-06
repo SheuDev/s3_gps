@@ -42,7 +42,7 @@ AddEventHandler('s3:gps:client:use', function()
                     Citizen.Wait(100)
                 end
             else
-                ESX.ShowNotification("Your GPS is turned on!")
+                ESX.ShowNotification("Your GPS is already turned on!")
             end
         elseif data.current.value == 'gpsoff' then
             if gps then
